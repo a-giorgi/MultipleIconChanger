@@ -21,6 +21,5 @@ public class Main {
         mf.setContentPane((new MainForm().mainPanel));
         mf.pack();
         mf.setVisible(true);
-
     }
 }

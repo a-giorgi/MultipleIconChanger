@@ -123,11 +123,34 @@ public abstract class IconChanger implements Runnable {
                 setIcon(directory, copiedPath.toFile());
             } catch (IOException e) {
                 listModel.addElement("[IO Error] " + directory.getAbsolutePath());
-                return;
             } catch (InterruptedException e) {
-                return;
+                listModel.addElement("[EXCEPTION] " + directory.getAbsolutePath());
             }
         }
+    }
+
+    public String joSetIcon(){
+        Path imagePath = Paths.get(filename);
+        if(imagePath.toFile().exists()){
+            File image = imagePath.toFile();
+            String copiedImageName = "icon_at_" + currentTimeMillis();// + "." + getFileExtension(image);
+            Path copiedPath = Paths.get(savingDir + "/" + copiedImageName + "." + getFileExtension(image));
+            try {
+                if(squareImage){
+                    squareAndSave(image,savingDir + "/" + copiedImageName);
+                    copiedPath = Paths.get(savingDir + "/" + copiedImageName + ".png");
+                }else {
+                    Files.copy(imagePath, copiedPath, StandardCopyOption.REPLACE_EXISTING);
+                }
+                setIcon(rootDir, copiedPath.toFile());
+                return "Icon set successfully!";
+            } catch (IOException e) {
+                return "[IO Error] " + rootDir.getAbsolutePath();
+            } catch (InterruptedException e) {
+                return "Exception occurred!";
+            }
+        }
+        return "The selected image does not exists!";
     }
 
     public void run() {

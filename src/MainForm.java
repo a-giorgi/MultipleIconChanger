@@ -1,4 +1,6 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +25,16 @@ public class MainForm extends JFrame{
     private JCheckBox useTheFirstImageCheckBox;
     private JScrollPane scrolling;
     private JList<String> directoryList;
+    private JTabbedPane tabbedPane1;
+    private JButton joApplyIconButton;
+    private JButton joTargetButton;
+    private JButton joSaveIcons;
+    private JButton joImage;
+    private JCheckBox joSquare;
+    private JTextField joSaveDirField;
+    private JTextField joTargetField;
+    private JTextField joImageField;
+    private JLabel joOutput;
     private DefaultListModel<String> listModel;
     private File targetDirectory;
     private IconChanger changer;
@@ -81,18 +93,7 @@ public class MainForm extends JFrame{
                     return;
                 }
 
-                String operatingSystem = System.getProperty("os.name").toLowerCase();
-
-                if(changer == null) {
-                    if (operatingSystem.contains("win")) {
-                        changer = new WindowsIconChanger(targetDirectory);
-                    } else if (operatingSystem.contains("nix") || operatingSystem.contains("nux") ||
-                            operatingSystem.contains("aix")) {
-                        changer = new LinuxIconChanger(targetDirectory);
-                    } else {
-                        return;
-                    }
-                }
+                setIconChanger();
 
                 //ICON CHANGER INITIALIZATION
                 changer.setSavingDir(new File(savingIconsTextField.getText()));
@@ -109,6 +110,74 @@ public class MainForm extends JFrame{
                 t.start();
             }
         });
+
+        joTargetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                File target = chooseDirectory();
+                if (target!=null){
+                    joTargetField.setText(target.getAbsolutePath());
+                    targetDirectory = target;
+                }
+            }
+        });
+
+        joSaveIcons.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                File target = chooseDirectory();
+                if (target!=null){
+                    joSaveDirField.setText(target.getAbsolutePath());
+                }
+            }
+        });
+        joImage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                File target = chooseImage();
+                if (target!=null){
+                    joImageField.setText(target.getAbsolutePath());
+                }
+            }
+        });
+        joApplyIconButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!validateJoForm()){
+                    return;
+                }
+
+                setIconChanger();
+
+                //ICON CHANGER INITIALIZATION
+                changer.setSavingDir(new File(joSaveDirField.getText()));
+                changer.setFilename(joImageField.getText());
+                changer.setSquareImage(joSquare.isSelected());
+                changer.setIconsButton(joApplyIconButton);
+
+                applyIconsButton.setEnabled(false);
+
+                String output = changer.joSetIcon();
+                applyIconsButton.setEnabled(true);
+                joOutput.setText(output);
+            }
+        });
+    }
+
+    private void setIconChanger(){
+        String operatingSystem = System.getProperty("os.name").toLowerCase();
+        if(changer == null) {
+            if (operatingSystem.contains("win")) {
+                changer = new WindowsIconChanger(targetDirectory);
+            } else if (operatingSystem.contains("nix") || operatingSystem.contains("nux") ||
+                    operatingSystem.contains("aix")) {
+                changer = new LinuxIconChanger(targetDirectory);
+            } else {
+                JOptionPane.showMessageDialog(this,"Unsupported OS!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                System.exit(-1);
+            }
+        }
     }
 
     private File chooseDirectory(){
@@ -122,13 +191,38 @@ public class MainForm extends JFrame{
             return jf.getSelectedFile();
         }
         return null;
+    }
 
+    private File chooseImage(){
+        final JFileChooser jf = new JFileChooser();
+        jf.setCurrentDirectory(new java.io.File("."));
+        jf.setDialogTitle("Select an image...");
+        FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("Image files", ImageIO.getReaderFileSuffixes());
+        jf.setFileFilter(imageFilter);
+
+        int returnVal = jf.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            return jf.getSelectedFile();
+        }
+        return null;
     }
 
     private boolean validateForm(){
         if(savingIconsTextField.getText().isEmpty() ||
                 textFieldDirectory.getText().isEmpty() ||
                 textFieldIcon.getText().isEmpty()){
+            Toolkit.getDefaultToolkit().beep();
+            JOptionPane.showMessageDialog(this,"Fill every field!", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateJoForm(){
+        if(joSaveDirField.getText().isEmpty() ||
+                joImageField.getText().isEmpty() ||
+                joTargetField.getText().isEmpty()){
             Toolkit.getDefaultToolkit().beep();
             JOptionPane.showMessageDialog(this,"Fill every field!", "Error",
                     JOptionPane.ERROR_MESSAGE);
