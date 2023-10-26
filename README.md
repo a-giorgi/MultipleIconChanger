@@ -4,7 +4,7 @@ This Java-based software allows the user to modify directory icons and their res
 ## Usage Instructions
 
 1. Begin by specifying the target directory in the "Choose target directory..." text field.
-2. Define the desired icon file name in the "Icon file name" field. This will be the image used as icon and it must be contained inside every directory that will have the icon changed.
+2. Define the desired icon file name in the "Icon file name" field. This will be the image used as icon, and it must be contained inside every directory that will have the icon changed.
 3. Set the recursion level by entering a number in the corresponding text field.
     - A value of 0 will only change the icon of the target directory.
     - A value of 1 will change the icons of the subdirectories within the target directory.
@@ -19,6 +19,15 @@ Icons generated will be saved in the directory indicated next to "Choose where t
 - Enable "Use as prefix" to search for the first image file whose name begins with the text specified in the "Icon file name" field.
 - Activate "Use the first image if the file is not available" to use the first available image file within the target directory if a file with the specified name is not found.
 - Check the "Square the image" box to crop the image to a square size before applying it as an icon.
+
+## Set single image
+
+If you want to set the image for just one directory follow these instructions: 
+1. Press on top on the "Just One" tab.
+2. Specify the target directory in the "Choose target directory..." text field.
+3. Choose the image to be used as icon by pressing on "Choose the image...".
+4. Define the directory where to save the icon using the "Choose where to save the icon..." button.
+
 
 ## Libraries Utilized
 
