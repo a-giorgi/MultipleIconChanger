@@ -1,6 +1,9 @@
 # Multiple Icon Changer
 This Java-based software allows the user to modify directory icons and their respective subdirectories. It offers the flexibility to assign distinct icons by utilizing image files located within each directory. Users have the option to specify their preferred image, but if it's not found, the software intelligently defaults to the first available image.
 
+![MIC.png](/images/MIC.png)
+
+
 ## Usage Instructions
 
 1. Begin by specifying the target directory in the "Choose target directory..." text field.
