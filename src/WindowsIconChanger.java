@@ -15,7 +15,7 @@ public class WindowsIconChanger extends IconChanger{
         int width = loadedImage.getWidth();
         int height = loadedImage.getHeight();
 
-        int icoMaxSize = 250;
+        int icoMaxSize = 256;
         int resizedWidth;
         int resizedHeight;
         if(height>width){
